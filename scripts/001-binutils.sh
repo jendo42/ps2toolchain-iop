@@ -56,13 +56,14 @@ PROC_NR=$(getconf _NPROCESSORS_ONLN)
 ## For each target...
 for TARGET in "mipsel-ps2-irx" "mipsel-none-elf"; do
   ## Create and enter the toolchain/build directory
-  rm -rf "build-$TARGET"
-  mkdir "build-$TARGET"
+  mkdir -p "build-$TARGET"
   cd "build-$TARGET"
 
   ## Configure the build.
   ../configure \
     --quiet \
+    --no-recursion \
+    --cache-file=build.cache \
     --prefix="$PS2DEV/$TARGET_ALIAS" \
     --target="$TARGET" \
     --disable-separate-code \
@@ -73,7 +74,6 @@ for TARGET in "mipsel-ps2-irx" "mipsel-none-elf"; do
   ## Compile and install.
   make --quiet -j "$PROC_NR"
   make --quiet -j "$PROC_NR" install-strip
-  make --quiet -j "$PROC_NR" clean
 
   ## Exit the build directory.
   cd ..
